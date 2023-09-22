@@ -8,6 +8,10 @@ const DynamicSpaceShooter = () => {
 				let player;
 				const bullets = [];
 				const enemies = [];
+				let moveLeft = false;
+				let moveRight = false;
+				let moveUp = false;
+				let moveDown = false;
 
 				p.preload = () => {
 					// Load your spacecraft image here
@@ -17,10 +21,9 @@ const DynamicSpaceShooter = () => {
 				p.setup = () => {
 					p.createCanvas(800, 600);
 					player = {
-						img: player, // Use 'img' property to store the image
+						img: player,
 						x: p.width / 2,
 						y: p.height - 50,
-						speed: 5,
 					};
 				};
 
@@ -32,12 +35,15 @@ const DynamicSpaceShooter = () => {
 
 					// Move and draw bullets
 					for (let i = bullets.length - 1; i >= 0; i--) {
-						bullets[i].y -= 5;
-						p.fill(255, 0, 0);
-						p.ellipse(bullets[i].x, bullets[i].y, 10, 10);
+						if (bullets[i]) {
+							// Check if bullets[i] exists
+							bullets[i].y -= 5;
+							p.fill(255, 0, 0);
+							p.ellipse(bullets[i].x, bullets[i].y, 10, 10);
 
-						if (bullets[i].y < 0) {
-							bullets.splice(i, 1);
+							if (bullets[i].y < 0) {
+								bullets.splice(i, 1);
+							}
 						}
 					}
 
@@ -67,6 +73,8 @@ const DynamicSpaceShooter = () => {
 						// Check for collision with bullets
 						for (let j = bullets.length - 1; j >= 0; j--) {
 							if (
+								enemies[i] &&
+								bullets[j] &&
 								bullets[j].x < enemies[i].x + 30 &&
 								bullets[j].x + 10 > enemies[i].x &&
 								bullets[j].y < enemies[i].y + 30 &&
@@ -82,21 +90,57 @@ const DynamicSpaceShooter = () => {
 							enemies.splice(i, 1);
 						}
 					}
+
+					// Continuous movement logic
+					if (moveLeft) {
+						player.x -= 5;
+					}
+					if (moveRight) {
+						player.x += 5;
+					}
+					if (moveUp) {
+						player.y -= 5;
+					}
+					if (moveDown) {
+						player.y += 5;
+					}
 				};
 
 				p.keyPressed = () => {
 					if (p.key === " ") {
 						bullets.push({ x: player.x + 25, y: player.y });
 					}
+				};
 
-					if (p.keyCode === p.LEFT_ARROW) {
-						player.x -= player.speed;
-					} else if (p.keyCode === p.RIGHT_ARROW) {
-						player.x += player.speed;
-					} else if (p.keyCode === p.UP_ARROW) {
-						player.y -= player.speed;
-					} else if (p.keyCode === p.DOWN_ARROW) {
-						player.y += player.speed;
+				p.keyReleased = () => {
+					// Clear movement flags when keys are released
+					if (p.key === "ArrowLeft" || p.key === "a") {
+						moveLeft = false;
+					}
+					if (p.key === "ArrowRight" || p.key === "d") {
+						moveRight = false;
+					}
+					if (p.key === "ArrowUp" || p.key === "w") {
+						moveUp = false;
+					}
+					if (p.key === "ArrowDown" || p.key === "s") {
+						moveDown = false;
+					}
+				};
+
+				p.keyTyped = () => {
+					// Set movement flags when keys are pressed
+					if (p.key === "ArrowLeft" || p.key === "a") {
+						moveLeft = true;
+					}
+					if (p.key === "ArrowRight" || p.key === "d") {
+						moveRight = true;
+					}
+					if (p.key === "ArrowUp" || p.key === "w") {
+						moveUp = true;
+					}
+					if (p.key === "ArrowDown" || p.key === "s") {
+						moveDown = true;
 					}
 				};
 			};
