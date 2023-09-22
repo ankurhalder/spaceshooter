@@ -1,9 +1,12 @@
-function index() {
+import SpaceShooter from "@/components/SpaceShooter";
+
+const Home = () => {
 	return (
 		<div>
-			<h1>Ankur Halder</h1>
+			<h1>Space Shooter Game</h1>
+			<SpaceShooter></SpaceShooter>
 		</div>
 	);
-}
+};
 
-export default index;
+export default Home;
