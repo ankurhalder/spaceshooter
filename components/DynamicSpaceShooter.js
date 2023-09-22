@@ -12,6 +12,8 @@ const DynamicSpaceShooter = () => {
 				let moveRight = false;
 				let moveUp = false;
 				let moveDown = false;
+				let currentScore = 0;
+				let bestScore = localStorage.getItem("bestScore") || 0;
 
 				p.preload = () => {
 					// Load your spacecraft image here
@@ -82,6 +84,10 @@ const DynamicSpaceShooter = () => {
 							p.noLoop();
 							p.textSize(32);
 							p.text("Game Over", p.width / 2 - 100, p.height / 2);
+							if (currentScore > bestScore) {
+								bestScore = currentScore;
+								localStorage.setItem("bestScore", bestScore);
+							}
 						}
 
 						// Check for collision with bullets
@@ -96,6 +102,7 @@ const DynamicSpaceShooter = () => {
 							) {
 								bullets.splice(j, 1);
 								enemies.splice(i, 1);
+								currentScore++;
 							}
 						}
 
@@ -118,6 +125,12 @@ const DynamicSpaceShooter = () => {
 					if (moveDown) {
 						player.y += 5;
 					}
+
+					// Display scores
+					p.fill(255);
+					p.textSize(24);
+					p.text(`Score: ${currentScore}`, 20, 30);
+					p.text(`Best Score: ${bestScore}`, 20, 60);
 				};
 
 				p.keyPressed = () => {
