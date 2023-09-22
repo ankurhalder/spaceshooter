@@ -30,6 +30,20 @@ const DynamicSpaceShooter = () => {
 				p.draw = () => {
 					p.background(0);
 
+					// Boundary checks for player movement
+					if (player.x < 0) {
+						player.x = 0;
+					}
+					if (player.x > p.width - 60) {
+						player.x = p.width - 60;
+					}
+					if (player.y < 0) {
+						player.y = 0;
+					}
+					if (player.y > p.height - 60) {
+						player.y = p.height - 60;
+					}
+
 					// Draw player spacecraft
 					p.image(player.img, player.x, player.y, 60, 60);
 
